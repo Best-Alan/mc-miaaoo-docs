@@ -1,0 +1,27 @@
+name: Unzip and Commit
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  unzip-and-commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 需要写入权限来提交更改
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Unzip file
+        run: |
+          unzip commit.zip -d /  # 将your-file.zip替换为实际的zip文件名
+          ls -la unzipped  # 查看解压后的文件
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}  # 使用GITHUB_TOKEN进行身份验证
+          commit_message: 'Add unzipped files'
+          branch: main
